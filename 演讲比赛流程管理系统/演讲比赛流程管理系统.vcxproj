@@ -19,7 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="speechManager.cpp" />
+    <ClCompile Include="演讲比赛流程管理系统.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="speechManager.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
