@@ -3,6 +3,9 @@
 #include<vector>
 #include<map>
 #include<algorithm>
+#include<deque>
+#include<functional>
+#include<numeric>
 
 #include "speaker.h"
 
@@ -34,6 +37,9 @@ public:
 
 	//抽签
 	void speechDraw();
+
+	//比赛
+	void speechContest();
 
 	//成员属性
 	//保存第一轮比赛选手编号容器

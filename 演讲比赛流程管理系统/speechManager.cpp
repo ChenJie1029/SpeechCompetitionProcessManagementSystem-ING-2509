@@ -68,7 +68,7 @@ void speechManager::startSpeech() {
 	//1.抽签
 	this->speechDraw();
 	//2.演讲
-
+	this->speechContest();
 	//3.显示晋级
 
 
@@ -107,6 +107,75 @@ void speechManager::speechDraw() {
 	cout << "------------------------------" << endl;
 	system("pause");
 	cout << endl;
+}
+
+//比赛
+void speechManager::speechContest() {
+	cout << "-------------------第" << this->m_Index << "轮比赛-------------------" << endl;
+
+	//准备临时容器 存放小组成绩
+	multimap<double, int, greater<double>> groupScore;
+	//记录人员个数  6人一组
+	int num = 0;
+
+	vector<int> v_Src;//比赛选手容器
+	if (this->m_Index == 1) {
+		v_Src = vec1;
+	}
+	else {
+		v_Src = vec2;
+	}
+
+	//遍历所有参赛选手
+	for (vector<int>::iterator it = v_Src.begin(); it != v_Src.end(); it++) {
+		//评委打分
+		num++;
+		deque<double> deq1;
+		for (int i = 0; i < 10; i++) {
+			double score = (rand() % 401 + 600) / 10.f;
+			//cout << score << " ";
+			deq1.push_back(score);
+		}
+
+		sort(deq1.begin(), deq1.end(), greater<double>());//排序
+		deq1.pop_front();//去除最高分
+		deq1.pop_back();//去除最低分
+
+		double sum = accumulate(deq1.begin(), deq1.end(), 0);//总分
+		double avg = sum / (double)deq1.size();
+ 
+		//打印平均分
+		//cout << "编号：" << *it << "\t" << "姓名：" << this->m_Speaker[*it].m_Name << "\t" << "平均分：" << avg << endl;
+
+		//将平均分放入map容器中
+		this->m_Speaker[*it].m_Score[this->m_Index - 1] = avg;
+
+		//将打分数据放入到临时小组容器中
+		groupScore.insert(make_pair(avg, *it));//key是平均分，value是编号
+		//每6人取前三名
+		if (num % 6 == 0) {
+			cout << "第" << num / 6 << "小组比赛名次：" << endl;
+			for (multimap<double, int, greater<double>>::iterator it = groupScore.begin(); it != groupScore.end(); it++) {
+				cout << "编号：" << it->second << "\t" << "姓名：" << this->m_Speaker[it->second].m_Name << "\t" << "成绩：" << this->m_Speaker[it->second].m_Score[this->m_Index - 1] << endl;
+			}
+
+			//取走前三名
+			int count = 0;
+			for (multimap<double, int, greater<double>>::iterator it = groupScore.begin(); it != groupScore.end() && count < 3; it++, count++) {
+				if (this->m_Index == 1) {
+					vec2.push_back((*it).second);
+				}
+				else {
+					vecVictory.push_back((*it).second);
+				}
+			}
+
+			groupScore.clear();
+			cout << endl;
+		}
+	}
+	cout << "-------------------第" << this->m_Index << "轮比赛结束-------------------" << endl;
+	system("pause");
 }
 
 //析构
