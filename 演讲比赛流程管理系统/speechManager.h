@@ -51,6 +51,9 @@ public:
 	//读取记录
 	void loadRecord();
 
+	//显示往届记录
+	void showRecord();
+
 	//判断文件是否为空
 	bool fileIsEmpty;
 

@@ -9,7 +9,7 @@ speechManager::speechManager() {
 	this->createSpeacher();
 
 	//加载往届记录
-	this->loadRecord();
+	//this->loadRecord();
 }
 
 //菜单功能
@@ -250,11 +250,46 @@ void speechManager::loadRecord() {
 	ifs.putback(ch);//将上面读取的单个字符再放回来
 
 	string data;
+	int  index = 0;//届数
 
 	while (ifs >> data) {
-		cout << data << endl;
+		//cout << data << endl;
+
+		vector<string> v;//存放字符串 6个
+
+		int pos = -1;//查到,位置的变量
+		int start = 0;//起始位置
+
+		while (1) {
+			pos = data.find(",", start);
+			if (pos == -1) {//没找到
+				break;
+			}
+			string temp = data.substr(start, pos - start);
+			//cout << temp << endl;
+			v.push_back(temp);
+			start = pos + 1;
+		}
+		this->m_Record.insert(make_pair(index, v));
+		index++;
 	}
 	ifs.close();
+
+	/*for (map<int, vector<string>>::iterator it = m_Record.begin(); it != m_Record.end(); it++) {
+		cout << it->first << "冠军编号：" << it->second[0] << "分数：" << it->second[1] << endl;
+	}*/
+}
+
+//显示往届记录
+void speechManager::showRecord() {
+	for (int i = 0; i < this->m_Record.size(); i++) {
+		cout << "第" << i + 1 << "届" << endl;
+		cout << "冠军编号：" << this->m_Record[i][0] << "\t" << "得分：" << this->m_Record[i][1] << endl;
+		cout << "亚军编号：" << this->m_Record[i][2] << "\t" << "得分：" << this->m_Record[i][3] << endl;
+		cout << "季军编号：" << this->m_Record[i][4] << "\t" << "得分：" << this->m_Record[i][5] << endl;
+	}
+	system("pause");
+	system("cls");
 }
 
 //析构
