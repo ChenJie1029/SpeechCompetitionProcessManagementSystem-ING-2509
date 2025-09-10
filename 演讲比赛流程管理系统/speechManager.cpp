@@ -9,7 +9,7 @@ speechManager::speechManager() {
 	this->createSpeacher();
 
 	//加载往届记录
-	//this->loadRecord();
+	this->loadRecord();
 }
 
 //菜单功能
@@ -41,6 +41,9 @@ void speechManager::initSpeech() {
 
 	//初始化比赛轮数
 	this->m_Index = 1;
+
+	//将记录容器清空
+	this->m_Record.clear();
 }
 
 //创建12名选手
@@ -85,6 +88,16 @@ void speechManager::startSpeech() {
 	this->showScore();
 	//4.保存分数到文件中
 	this->saveRecord();
+
+	//重置比赛，获取记录
+	//初始化容器和属性
+	this->initSpeech();
+
+	//创建12名选手
+	this->createSpeacher();
+
+	//加载往届记录
+	this->loadRecord();
 
 	cout << "本届比赛完毕!" << endl;
 	system("pause");
@@ -223,6 +236,9 @@ void speechManager::saveRecord() {
 	//关闭
 	ofs.close();
 	cout << "文件记录已经保存" << endl;
+
+	//更改文件不为空的状态
+	this->fileIsEmpty = false;
 }
 
 //读取记录
@@ -230,7 +246,7 @@ void speechManager::loadRecord() {
 	ifstream ifs("speech.csv", ios::in);//读文件
 	if (!ifs.is_open()) {
 		this->fileIsEmpty = true;
-		cout << "文件不存在" << endl;
+		//cout << "文件不存在" << endl;
 		ifs.close();
 		return;
 	}
@@ -239,7 +255,7 @@ void speechManager::loadRecord() {
 	char ch;
 	ifs >> ch;
 	if (ifs.eof()) {
-		cout << "文件为空" << endl;
+		//cout << "文件为空" << endl;
 		this->fileIsEmpty = true;
 		ifs.close();
 		return;
@@ -282,12 +298,18 @@ void speechManager::loadRecord() {
 
 //显示往届记录
 void speechManager::showRecord() {
-	for (int i = 0; i < this->m_Record.size(); i++) {
-		cout << "第" << i + 1 << "届" << endl;
-		cout << "冠军编号：" << this->m_Record[i][0] << "\t" << "得分：" << this->m_Record[i][1] << endl;
-		cout << "亚军编号：" << this->m_Record[i][2] << "\t" << "得分：" << this->m_Record[i][3] << endl;
-		cout << "季军编号：" << this->m_Record[i][4] << "\t" << "得分：" << this->m_Record[i][5] << endl;
+	if (this->fileIsEmpty) {
+		cout << "文件为空或文件不存在！" << endl;
 	}
+	else {
+		for (int i = 0; i < this->m_Record.size(); i++) {
+			cout << "第" << i + 1 << "届" << endl;
+			cout << "冠军编号：" << this->m_Record[i][0] << "\t" << "得分：" << this->m_Record[i][1] << endl;
+			cout << "亚军编号：" << this->m_Record[i][2] << "\t" << "得分：" << this->m_Record[i][3] << endl;
+			cout << "季军编号：" << this->m_Record[i][4] << "\t" << "得分：" << this->m_Record[i][5] << endl;
+		}
+	}
+
 	system("pause");
 	system("cls");
 }

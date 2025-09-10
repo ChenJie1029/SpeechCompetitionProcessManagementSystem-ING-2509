@@ -1,4 +1,5 @@
 #include<iostream>
+#include<ctime>
 #include "speechManager.h"
 
 using namespace std;
@@ -6,6 +7,9 @@ using namespace std;
 //演讲比赛流程管理系统
 
 int main() {
+	//随机数种子
+	srand((unsigned int)time(NULL));
+
 	//创建管理类对象
 	speechManager sm;
 
@@ -27,7 +31,6 @@ int main() {
 			sm.startSpeech();
 			break;
 		case 2://查看往届记录
-			sm.loadRecord();
 			sm.showRecord();
 			break;
 		case 3://清空比赛记录
