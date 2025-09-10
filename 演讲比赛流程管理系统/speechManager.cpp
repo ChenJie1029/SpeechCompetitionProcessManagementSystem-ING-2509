@@ -7,6 +7,9 @@ speechManager::speechManager() {
 
 	//创建12名选手
 	this->createSpeacher();
+
+	//加载往届记录
+	this->loadRecord();
 }
 
 //菜单功能
@@ -70,16 +73,22 @@ void speechManager::startSpeech() {
 	//2.演讲
 	this->speechContest();
 	//3.显示晋级
-
+	this->showScore();
 
 	//第二轮开始比赛
+	this->m_Index++;
 	//1.抽签
-
+	this->speechDraw();
 	//2.演讲
-
+	this->speechContest();
 	//3.显示最终结果
-
+	this->showScore();
 	//4.保存分数到文件中
+	this->saveRecord();
+
+	cout << "本届比赛完毕!" << endl;
+	system("pause");
+	system("cls");
 }
 
 //抽签
@@ -176,6 +185,76 @@ void speechManager::speechContest() {
 	}
 	cout << "-------------------第" << this->m_Index << "轮比赛结束-------------------" << endl;
 	system("pause");
+}
+
+//显示得分
+void speechManager::showScore() {
+	cout << "-------------------第" << this->m_Index << "轮比赛晋级选手----------------" << endl;
+
+	vector<int> v;
+	if (this->m_Index == 1) {
+		v = vec2;
+	}
+	else {
+		v = vecVictory;
+	}
+
+	for (vector<int>::iterator it = v.begin(); it != v.end(); it++) {
+		cout << "选手编号：" << *it << "姓名：" << this->m_Speaker[*it].m_Name << "得分：" << this->m_Speaker[*it].m_Score[this->m_Index - 1] << endl;
+	}
+	cout << endl;
+
+	system("pause");
+	system("cls");
+	this->show_Menu();
+}
+
+//保存记录
+void speechManager::saveRecord() {
+	ofstream ofs;
+	ofs.open("speech.csv", ios::out | ios::app);//用追加的方式写文件
+
+	//将每个选手数据写入到文件中
+	for (vector<int>::iterator it = vecVictory.begin(); it != vecVictory.end(); it++) {
+		ofs << *it << "," << this->m_Speaker[*it].m_Score[1] << ",";
+	}
+	ofs << endl;
+
+	//关闭
+	ofs.close();
+	cout << "文件记录已经保存" << endl;
+}
+
+//读取记录
+void speechManager::loadRecord() {
+	ifstream ifs("speech.csv", ios::in);//读文件
+	if (!ifs.is_open()) {
+		this->fileIsEmpty = true;
+		cout << "文件不存在" << endl;
+		ifs.close();
+		return;
+	}
+
+	//文件清空的情况
+	char ch;
+	ifs >> ch;
+	if (ifs.eof()) {
+		cout << "文件为空" << endl;
+		this->fileIsEmpty = true;
+		ifs.close();
+		return;
+	}
+
+	//文件不为空
+	this->fileIsEmpty = false;
+	ifs.putback(ch);//将上面读取的单个字符再放回来
+
+	string data;
+
+	while (ifs >> data) {
+		cout << data << endl;
+	}
+	ifs.close();
 }
 
 //析构
